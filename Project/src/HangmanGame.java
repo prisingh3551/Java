@@ -37,7 +37,7 @@ public class HangmanGame extends JFrame implements ActionListener{
     JTextField guessChar;
     JButton reset;
     Font font1;
-    public Example() {
+    public HangmanGame() {
         super("Main");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,6 +160,6 @@ public class HangmanGame extends JFrame implements ActionListener{
         return WORDS[(int)(Math.random() * WORDS.length)];
     }
     public static void main(String[] args) {
-        new Example();
+        new HangmanGame();
     }
 }
