@@ -1,14 +1,25 @@
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,12 +27,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import java.util.Arrays;
 
 public class HangmanGame extends JFrame implements ActionListener{
     Container c;
-    Panel p1, p2;
-    static final String[] WORDS = {"hello", "world", "java", "hangman", "programming"};
+    JPanel p1, p2, bg;
+    static final String[] WORDS = {"hello", "world", "java", "hangman", "programming", "mini project"};
     static final int MAX_TRIAL = 6;
     String wordToGuess;
     char[] guessedWord;
@@ -31,49 +41,75 @@ public class HangmanGame extends JFrame implements ActionListener{
     JLabel guessLabel;
     JTextField guessChar;
     JButton reset;
-    Font font1;
+    Font font1, font2;
     public HangmanGame() {
         super("Main");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        // try {
-        //     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        //     font1 = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\Lenovo\\Desktop\\sem6\\Java\\Project\\Bungee_Outline"));
-        //     ge.registerFont(font1);
-        // } 
-        // catch (IOException | FontFormatException e) {
-        //     e.printStackTrace();
-        // }
-
+        
+        font2 = new Font("Bungee Outline", Font.BOLD, 14);
+        font1 = new Font("Bungee Spice Regular", Font.ITALIC, 14);
         c = getContentPane();
-        GridLayout gl = new GridLayout(1, 2, 10, 10);
-        c.setLayout(gl);
+
+        bg = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    BufferedImage image = ImageIO.read(new File("f1.png ")); 
+                    Graphics2D g2d = (Graphics2D) g.create();
+                    float opacity = 0.5f;
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                    g2d.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                    g2d.dispose();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+
+        GridLayout gl = new GridLayout(1, 2, 0, 0);
+        bg.setLayout(gl);
+
+        
+        p1 = new JPanel();
+        p1.setOpaque(false);
+
+        p2 = new JPanel();
+        p2.setOpaque(false); 
+        p2.setLayout(new FlowLayout());
 
         wordLabel = new JLabel("Secret Word");
+        wordLabel.setBounds(600, 100, 40, 60);
+        wordLabel.setFont(font1);
         guessLabel = new JLabel("Enter a character to guess");
+        guessLabel.setFont(font1);
+
         attemptsLabel = new JLabel("Attempts left");
+        attemptsLabel.setFont(font1);
         
         guessChar = new JTextField(1);
         guessChar.addActionListener(this);
         
-        p1 = new Panel();
-        p1.setBackground(Color.LIGHT_GRAY);
         Draw draw = new Draw();
         p1.add(draw); // Add Draw component to p1
         
-        p2 = new Panel();
+        
         p2.add(wordLabel);
-        GridLayout gl2 = new GridLayout(6, 1, 100, 5);
-        p2.setLayout(gl2);
         p2.add(attemptsLabel);
         p2.add(guessLabel);
         p2.add(guessChar);
 
-        c.add(p1);
-        c.add(p2);
+        bg.add(p1);
+        bg.add(p2);
 
-        reset = new JButton("RESET");
+        ImageIcon originalIcon = new ImageIcon("reset.png");
+            
+        // change the ImageIcon to the desired dimensions
+        Image scaledImage = originalIcon.getImage().getScaledInstance(100, 80, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        reset = new JButton(scaledIcon);
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,6 +118,8 @@ public class HangmanGame extends JFrame implements ActionListener{
         });
         p2.add(reset);
         resetGame(); // initial call to start game
+
+        c.add(bg);
 
         setVisible(true);
     }
@@ -120,56 +158,78 @@ public class HangmanGame extends JFrame implements ActionListener{
         p1.repaint(); // Trigger the panel to repaint
     }
 
+
     private class Draw extends JPanel {
-        public Draw() {
+
+        public Draw() 
+        {
+            this.setOpaque(false);
             setPreferredSize(new Dimension(400, 600));
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
+            
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setStroke(new BasicStroke(3));
+
             if(attempts >= 0)
             {
-                g.setColor(Color.BLACK);
-                g.drawLine(100, 100, 100, 400); // vertical line
-                g.drawLine(50, 400, 350, 400); // baseline
-                g.drawLine(100, 350, 60, 400); // left slant line bottom
-                g.drawLine(100, 350, 140, 400); // right slant line bottom
-                g.drawLine(80, 100, 270, 100); // top line
-                g.drawLine(100, 150, 140, 100); // slant line top                
+                g2d.drawLine(100, 100, 100, 400); // vertical line
+                g2d.drawLine(50, 400, 350, 400); // baseline
+                g2d.drawLine(100, 350, 60, 400); // left slant line bottom
+                g2d.drawLine(100, 350, 140, 400); // right slant line bottom
+                g2d.drawLine(80, 100, 270, 100); // top line
+                g2d.drawLine(100, 150, 140, 100); // slant line top          
             }
 
             if (attempts >= 1)
-                g.drawLine(200, 100, 200, 170);
+                g2d.drawLine(200, 100, 200, 170);
             if (attempts >= 2)
-                g.drawArc(180, 170, 40, 40, 0, 360);
+                g2d.drawArc(180, 170, 40, 40, 0, 360);
             if(attempts >= 3)
             {
-                g.drawLine(200, 210, 200, 250);
+                g2d.drawLine(200, 210, 200, 250);
             }   
             if(attempts >= 4)
             {
-                g.drawLine(200, 230, 250, 200);
-                g.drawLine(200, 230, 150, 200);
+                g2d.drawLine(200, 230, 250, 200);
+                g2d.drawLine(200, 230, 150, 200);
             }
             if(attempts >= 5)
             {
-                g.drawLine(200, 250, 160, 300);
-                g.drawLine(200, 250, 240, 300);
+                g2d.drawLine(200, 250, 160, 300);
+                g2d.drawLine(200, 250, 240, 300);
             }
             if (attempts >= 6) {
-                g.drawLine(190, 180, 190, 185);
-                g.drawArc(190, 200, 20, 10, 180, -180);
+                g2d.drawLine(185, 190, 190, 185); //eye1
+                g2d.drawLine(190, 190, 185, 185);
+                g2d.drawLine(210, 190, 215, 185); // eye2
+                g2d.drawLine(215, 190, 210, 185);
+                
+                g2d.drawArc(193, 200, 15, 10, 180, -180); // mouth
+
             }
         }
     }
 
     private void resetGame()
     {
-        
         wordToGuess = selectRandomWord();
         guessedWord = new char[wordToGuess.length()];
-        Arrays.fill(guessedWord, '_');
+        for(int i = 0; i < wordToGuess.length(); i++)
+        {
+            if(wordToGuess.charAt(i) == ' ')
+            {
+                guessedWord[i] = ' ';
+            }
+            else
+            {
+                guessedWord[i] = '?';
+            }
+        }
         attempts = 0;
         wordLabel.setText("Word To Guess : " + String.valueOf(guessedWord));
         attemptsLabel.setText("Attempts left : " + (MAX_TRIAL - attempts));
