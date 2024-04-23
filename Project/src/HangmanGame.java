@@ -1,4 +1,5 @@
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Container;
@@ -31,7 +32,7 @@ import java.awt.event.FocusEvent;
 public class HangmanGame extends JFrame implements ActionListener{
     Container c;
     JPanel p1, p2, bg;
-    static final int MAX_TRIAL = 6;
+    static final int MAX_TRIAL = 8;
     String wordToGuess;
     char[] guessedWord;
     int attempts;
@@ -41,15 +42,16 @@ public class HangmanGame extends JFrame implements ActionListener{
     JLabel alreadyUsedChar;
     JTextField guessChar;
     JButton enter, reset;
-    Font font1, font2;
+    Font font;
+
+    Set<Character> usedChar;
     public HangmanGame() {
         super("Main");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        font2 = new Font("Bungee Outline", Font.BOLD, 14);
-        font1 = new Font("Bungee Spice Regular", Font.ITALIC, 14);
+        font = new Font("Creepster", Font.ITALIC, 20);
         c = getContentPane();
 
         bg = new JPanel() {
@@ -81,22 +83,22 @@ public class HangmanGame extends JFrame implements ActionListener{
         p2.setOpaque(false); 
 
         attemptsLabel = new JLabel("Attempts left");
-        attemptsLabel.setBounds(10, 50, 400, 60);
-        attemptsLabel.setFont(font1);
+        attemptsLabel.setBounds(10, 100, 400, 60);
+        attemptsLabel.setFont(font);
 
         wordLabel = new JLabel("Word To Guess : ");
-        wordLabel.setBounds(10, 120, 400, 60);
-        wordLabel.setFont(font1);
+        wordLabel.setBounds(10, 170, 400, 60);
+        wordLabel.setFont(font);
 
         guessLabel = new JLabel("Enter a character to guess : ");
-        guessLabel.setBounds(10, 190, 250, 60);
-        guessLabel.setFont(font1);
+        guessLabel.setBounds(10, 240, 250, 60);
+        guessLabel.setFont(font);
 
         guessChar = new JTextField(1);
-        guessChar.setBounds(260, 190, 50, 40);
+        guessChar.setBounds(260, 250, 50, 40);
 
         enter = new JButton("Enter");
-        enter.setBounds(100, 300, 100, 50);
+        enter.setBounds(100, 350, 100, 50);
         
         enter.addActionListener(this);
 
@@ -115,10 +117,10 @@ public class HangmanGame extends JFrame implements ActionListener{
         });
 
         alreadyUsedChar = new JLabel("Characters Used : ");
-        alreadyUsedChar.setBounds(10, 350, 450, 100);
-        alreadyUsedChar.setFont(font1);
+        alreadyUsedChar.setBounds(30, 450, 1000, 100);
+        alreadyUsedChar.setFont(font);
 
-        
+        usedChar = new HashSet<>();
         Draw draw = new Draw();
         p1.add(draw); // Add Draw component to p1 to display the hangman figure
         
@@ -129,13 +131,12 @@ public class HangmanGame extends JFrame implements ActionListener{
         p2.add(guessChar);
         p2.add(enter);
 
-        p2.add(alreadyUsedChar);
-
         bg.add(p1);
         bg.add(p2);
+        bg.add(alreadyUsedChar);
 
         reset = new JButton("RESET");
-        reset.setBounds(230, 300, 100, 50);
+        reset.setBounds(230, 350, 100, 50);
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,21 +157,30 @@ public class HangmanGame extends JFrame implements ActionListener{
         char guess = input.charAt(0);
         boolean found = false;
 
-        for (int i = 0; i < wordToGuess.length(); i++) {
-            if (wordToGuess.charAt(i) == guess) {
-                guessedWord[i] = guess;
-                found = true;
+        if(usedChar.contains(guess))
+        {
+            //do nothing
+        }
+        else
+        {
+            for (int i = 0; i < wordToGuess.length(); i++) {
+                if (wordToGuess.charAt(i) == guess) {
+                    guessedWord[i] = guess;
+                    found = true;
+                }
+            }
+            usedChar.add(guess);
+            if (!found) {
+                attempts++;
+                setAttempts(attempts);
             }
         }
 
-        if (!found) {
-            attempts++;
-            setAttempts(attempts);
-        }
-
         wordLabel.setText("Word To Guess : " + String.valueOf(guessedWord));
-        attemptsLabel.setText("Attempts left: " + (MAX_TRIAL - attempts));
-        alreadyUsedChar.setText(alreadyUsedChar.getText() + "\t" + guess);
+        attemptsLabel.setText("Attempts left : " + (MAX_TRIAL - attempts));
+        
+        String str = alreadyUsedChar.getText() + "  " + guess;
+        alreadyUsedChar.setText(str);
 
         if (String.valueOf(guessedWord).equals(wordToGuess)) {
             JOptionPane.showMessageDialog(this, "Congratulations! You guessed the word: " + wordToGuess);
@@ -223,14 +233,20 @@ public class HangmanGame extends JFrame implements ActionListener{
             if(attempts >= 4)
             {
                 g2d.drawLine(200, 230, 250, 200);
-                g2d.drawLine(200, 230, 150, 200);
             }
             if(attempts >= 5)
             {
+                g2d.drawLine(200, 230, 150, 200);
+            }
+            if(attempts >= 6)
+            {
                 g2d.drawLine(200, 250, 160, 300);
+            }
+            if(attempts >= 7)
+            {
                 g2d.drawLine(200, 250, 240, 300);
             }
-            if (attempts >= 6) {
+            if (attempts >= 8) {
                 g2d.drawLine(185, 190, 190, 185); //eye1
                 g2d.drawLine(190, 190, 185, 185);
                 g2d.drawLine(210, 190, 215, 185); // eye2
@@ -262,6 +278,7 @@ public class HangmanGame extends JFrame implements ActionListener{
         wordLabel.setText("Word To Guess : " + String.valueOf(guessedWord));
         attemptsLabel.setText("Attempts left : " + (MAX_TRIAL - attempts));
         alreadyUsedChar.setText("Characters Used : ");
+        usedChar.clear();
         p1.repaint();
     }
 
