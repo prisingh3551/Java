@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,13 +19,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.awt.event.FocusEvent;
 
 public class HangmanGame extends JFrame implements ActionListener{
@@ -43,8 +40,8 @@ public class HangmanGame extends JFrame implements ActionListener{
     JTextField guessChar;
     JButton enter, reset;
     Font font;
-
     Set<Character> usedChar;
+    
     public HangmanGame() {
         super("Main");
         setSize(800, 600);
@@ -70,7 +67,6 @@ public class HangmanGame extends JFrame implements ActionListener{
                 }
             }
         };
-
         bg.setLayout(null);
 
         p1 = new JPanel();
@@ -99,10 +95,9 @@ public class HangmanGame extends JFrame implements ActionListener{
 
         enter = new JButton("Enter");
         enter.setBounds(100, 350, 100, 50);
-        
         enter.addActionListener(this);
 
-        // Add focus listener to the button
+        // Add focus listener to the label so that the cursor does not go out of focus when we click on enter button
         guessChar.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -121,9 +116,9 @@ public class HangmanGame extends JFrame implements ActionListener{
         alreadyUsedChar.setFont(font);
 
         usedChar = new HashSet<>();
+        
         Draw draw = new Draw();
         p1.add(draw); // Add Draw component to p1 to display the hangman figure
-        
         
         p2.add(attemptsLabel);
         p2.add(wordLabel);
@@ -185,19 +180,19 @@ public class HangmanGame extends JFrame implements ActionListener{
         if (String.valueOf(guessedWord).equals(wordToGuess)) {
             JOptionPane.showMessageDialog(this, "Congratulations! You guessed the word: " + wordToGuess);
             resetGame();
-        } else if (attempts >= MAX_TRIAL) {
+        } 
+        else if (attempts >= MAX_TRIAL) {
             JOptionPane.showMessageDialog(this, "Sorry, you ran out of attempts. The word was: " + wordToGuess);
             resetGame();
         }
     }
+    
     private void setAttempts(int attempts) {
         this.attempts = attempts;
         p1.repaint(); // Trigger the panel to repaint
     }
 
-
     private class Draw extends JPanel {
-
         public Draw() 
         {
             this.setOpaque(false);
@@ -207,7 +202,6 @@ public class HangmanGame extends JFrame implements ActionListener{
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             
             Graphics2D g2d = (Graphics2D) g;
             g2d.setStroke(new BasicStroke(3));
@@ -227,33 +221,21 @@ public class HangmanGame extends JFrame implements ActionListener{
             if (attempts >= 2)
                 g2d.drawArc(180, 170, 40, 40, 0, 360);
             if(attempts >= 3)
-            {
                 g2d.drawLine(200, 210, 200, 250);
-            }   
             if(attempts >= 4)
-            {
                 g2d.drawLine(200, 230, 250, 200);
-            }
             if(attempts >= 5)
-            {
                 g2d.drawLine(200, 230, 150, 200);
-            }
             if(attempts >= 6)
-            {
                 g2d.drawLine(200, 250, 160, 300);
-            }
             if(attempts >= 7)
-            {
                 g2d.drawLine(200, 250, 240, 300);
-            }
             if (attempts >= 8) {
                 g2d.drawLine(185, 190, 190, 185); //eye1
                 g2d.drawLine(190, 190, 185, 185);
                 g2d.drawLine(210, 190, 215, 185); // eye2
                 g2d.drawLine(215, 190, 210, 185);
-                
                 g2d.drawArc(193, 200, 15, 10, 180, -180); // mouth
-
             }
         }
     }
