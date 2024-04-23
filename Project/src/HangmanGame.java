@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import java.util.Arrays;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -14,30 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
-=======
-
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -45,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,16 +27,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.awt.event.FocusEvent;
-=======
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
 
 public class HangmanGame extends JFrame implements ActionListener{
     Container c;
     JPanel p1, p2, bg;
-<<<<<<< HEAD
-=======
-    static final String[] WORDS = {"hello", "world", "java", "hangman", "programming", "mini project"};
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
     static final int MAX_TRIAL = 6;
     String wordToGuess;
     char[] guessedWord;
@@ -70,15 +38,9 @@ public class HangmanGame extends JFrame implements ActionListener{
     JLabel wordLabel;
     JLabel attemptsLabel;
     JLabel guessLabel;
-<<<<<<< HEAD
     JLabel alreadyUsedChar;
-    boolean[] usedChar;
     JTextField guessChar;
     JButton enter, reset;
-=======
-    JTextField guessChar;
-    JButton reset;
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
     Font font1, font2;
     public HangmanGame() {
         super("Main");
@@ -95,11 +57,7 @@ public class HangmanGame extends JFrame implements ActionListener{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 try {
-<<<<<<< HEAD
                     BufferedImage image = ImageIO.read(new File("theme.jpeg")); 
-=======
-                    BufferedImage image = ImageIO.read(new File("f1.png ")); 
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
                     Graphics2D g2d = (Graphics2D) g.create();
                     float opacity = 0.5f;
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
@@ -111,7 +69,6 @@ public class HangmanGame extends JFrame implements ActionListener{
             }
         };
 
-<<<<<<< HEAD
         bg.setLayout(null);
 
         p1 = new JPanel();
@@ -173,54 +130,12 @@ public class HangmanGame extends JFrame implements ActionListener{
         p2.add(enter);
 
         p2.add(alreadyUsedChar);
-=======
-        GridLayout gl = new GridLayout(1, 2, 0, 0);
-        bg.setLayout(gl);
-
-        
-        p1 = new JPanel();
-        p1.setOpaque(false);
-
-        p2 = new JPanel();
-        p2.setOpaque(false); 
-        p2.setLayout(new FlowLayout());
-
-        wordLabel = new JLabel("Secret Word");
-        wordLabel.setBounds(600, 100, 40, 60);
-        wordLabel.setFont(font1);
-        guessLabel = new JLabel("Enter a character to guess");
-        guessLabel.setFont(font1);
-
-        attemptsLabel = new JLabel("Attempts left");
-        attemptsLabel.setFont(font1);
-        
-        guessChar = new JTextField(1);
-        guessChar.addActionListener(this);
-        
-        Draw draw = new Draw();
-        p1.add(draw); // Add Draw component to p1
-        
-        
-        p2.add(wordLabel);
-        p2.add(attemptsLabel);
-        p2.add(guessLabel);
-        p2.add(guessChar);
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
 
         bg.add(p1);
         bg.add(p2);
 
-<<<<<<< HEAD
         reset = new JButton("RESET");
         reset.setBounds(230, 300, 100, 50);
-=======
-        ImageIcon originalIcon = new ImageIcon("reset.png");
-            
-        // change the ImageIcon to the desired dimensions
-        Image scaledImage = originalIcon.getImage().getScaledInstance(100, 80, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        reset = new JButton(scaledIcon);
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -255,10 +170,7 @@ public class HangmanGame extends JFrame implements ActionListener{
 
         wordLabel.setText("Word To Guess : " + String.valueOf(guessedWord));
         attemptsLabel.setText("Attempts left: " + (MAX_TRIAL - attempts));
-<<<<<<< HEAD
         alreadyUsedChar.setText(alreadyUsedChar.getText() + "\t" + guess);
-=======
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
 
         if (String.valueOf(guessedWord).equals(wordToGuess)) {
             JOptionPane.showMessageDialog(this, "Congratulations! You guessed the word: " + wordToGuess);
@@ -332,12 +244,8 @@ public class HangmanGame extends JFrame implements ActionListener{
 
     private void resetGame()
     {
-<<<<<<< HEAD
         String randomWord = fetchRandomWord();
         wordToGuess = randomWord;
-=======
-        wordToGuess = selectRandomWord();
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
         guessedWord = new char[wordToGuess.length()];
         for(int i = 0; i < wordToGuess.length(); i++)
         {
@@ -347,20 +255,13 @@ public class HangmanGame extends JFrame implements ActionListener{
             }
             else
             {
-<<<<<<< HEAD
                 guessedWord[i] = '_';
-=======
-                guessedWord[i] = '?';
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
             }
         }
         attempts = 0;
         wordLabel.setText("Word To Guess : " + String.valueOf(guessedWord));
         attemptsLabel.setText("Attempts left : " + (MAX_TRIAL - attempts));
-<<<<<<< HEAD
         alreadyUsedChar.setText("Characters Used : ");
-        usedChar = new boolean[26];
-        Arrays.fill(usedChar, false);
         p1.repaint();
     }
 
@@ -383,15 +284,6 @@ public class HangmanGame extends JFrame implements ActionListener{
         return result.toString();
     }
 
-=======
-        p1.repaint();
-    }
-
-    private static String selectRandomWord()
-    {
-        return WORDS[(int)(Math.random() * WORDS.length)];
-    }
->>>>>>> 068b847a3bc16d75153e1277a86d075fe2138479
     public static void main(String[] args) {
         new HangmanGame();
     }
