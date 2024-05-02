@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,13 +20,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.awt.event.FocusEvent;
 
 public class HangmanGame extends JFrame implements ActionListener{
@@ -44,10 +41,10 @@ public class HangmanGame extends JFrame implements ActionListener{
     JTextField guessChar;
     JButton enter, reset;
     Font font;
-
     Set<Character> usedChar;
+
     public HangmanGame() {
-        super("Main");
+        super("HANGMAN - GAME");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -112,7 +109,7 @@ public class HangmanGame extends JFrame implements ActionListener{
 
             @Override
             public void focusLost(FocusEvent e) {
-                // Set focus back to the text field when button loses focus
+                // Set focus back to the text field when enter button is clicked
                 guessChar.requestFocusInWindow();
             }
         });
@@ -198,7 +195,6 @@ public class HangmanGame extends JFrame implements ActionListener{
         p1.repaint(); // Trigger the panel to repaint
     }
 
-
     private class Draw extends JPanel {
 
         public Draw() 
@@ -211,7 +207,6 @@ public class HangmanGame extends JFrame implements ActionListener{
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            
             Graphics2D g2d = (Graphics2D) g;
             g2d.setStroke(new BasicStroke(3));
 
@@ -264,7 +259,8 @@ public class HangmanGame extends JFrame implements ActionListener{
     private void resetGame()
     {
         String randomWord = fetchRandomWord();
-        wordToGuess = randomWord;
+        // wordToGuess = randomWord;
+        wordToGuess = "Programming";
         guessedWord = new char[wordToGuess.length()];
         for(int i = 0; i < wordToGuess.length(); i++)
         {
